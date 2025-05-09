@@ -5,14 +5,14 @@ import BookCard from './BookCard';
 
 const FeaturedBooks = ({ title, books, viewAllLink }) => {
   return (
-    <div className="py-12">
-      <div className="container mx-auto px-4">
+    <div className="py-12 bg-oldTomes-cream">
+      <div className="container mx-auto px-6">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-serif font-bold text-oldTomes-darkBrown">{title}</h2>
+          <h2 className="text-3xl font-serif font-bold text-black">{title}</h2>
           {viewAllLink && (
             <Link to={viewAllLink} className="flex items-center text-oldTomes-brown hover:text-oldTomes-darkBrown transition-colors">
-              <span>View all</span>
-              <svg className="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <span className="mr-2">View all</span>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
               </svg>
             </Link>
