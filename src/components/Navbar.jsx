@@ -1,164 +1,199 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Book, ShoppingCart, User, Search, ChevronDown, Menu } from 'lucide-react';
 
 const Navbar = () => {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleCategories = () => setIsCategoriesOpen(!isCategoriesOpen);
+  const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
+  const categories = [
+    'Classic Literature',
+    'History',
+    'Philosophy',
+    'Poetry',
+    'All Categories'
+  ];
+
+  const userMenuItems = [
+    { name: 'My Account', path: '/account' },
+    { name: 'My Orders', path: '/orders' },
+    { name: 'Wishlist', path: '/wishlist' },
+    { name: 'Sign Out', path: '/signout' }
+  ];
+
   return (
-    <nav className="bg-oldTomes-cream border-b border-oldTomes-gold/10">
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+    <nav className="bg-amber-50/95 border-b border-amber-200/20 shadow-sm">
+      <div className="container mx-auto px-6">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <div className="text-oldTomes-darkBrown font-serif text-2xl flex items-center">
-              <span className="mr-2 text-xl">📚</span>
-              <span className="font-bold">OldTomes</span>
-            </div>
+          <Link to="/" className="flex items-center gap-2">
+            <Book className="text-amber-800" size={24} />
+            <span className="text-2xl font-serif font-bold text-stone-800">
+              Old<span className="text-amber-800">Tomes</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-gray-700 hover:text-oldTomes-brown">Home</Link>
+            <Link to="/" className="text-stone-700 hover:text-amber-800 transition-colors font-medium">Home</Link>
             
             {/* Categories Dropdown */}
             <div className="relative">
               <button 
-                className="text-gray-700 hover:text-oldTomes-brown flex items-center"
+                className="flex items-center gap-1 text-stone-700 hover:text-amber-800 transition-colors font-medium"
                 onClick={toggleCategories}
               >
-                Categories
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                Categories 
+                <ChevronDown size={16} className={`transition-transform ${isCategoriesOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {isCategoriesOpen && (
-                <div className="absolute z-10 mt-4 w-56 bg-oldTomes-cream border border-oldTomes-gold/10 rounded-md shadow-md py-1 animate-fade-in">
-                  <Link to="/category/classic-literature" className="block px-6 py-3 hover:bg-oldTomes-gold/10">
-                    Classic Literature
-                  </Link>
-                  <Link to="/category/history" className="block px-6 py-3 hover:bg-oldTomes-gold/10">
-                    History
-                  </Link>
-                  <Link to="/category/philosophy" className="block px-6 py-3 hover:bg-oldTomes-gold/10">
-                    Philosophy
-                  </Link>
-                  <Link to="/category/poetry" className="block px-6 py-3 hover:bg-oldTomes-gold/10">
-                    Poetry
-                  </Link>
-                  <Link to="/categories" className="block px-6 py-3 hover:bg-oldTomes-gold/10">
-                    All Categories
-                  </Link>
+                <div className="absolute top-full right-0 mt-1 w-56 bg-amber-50 border border-amber-200 rounded-md shadow-lg py-1 z-10 animate-fade-in">
+                  {categories.map((category, index) => (
+                    <Link 
+                      key={index} 
+                      to={`/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="block px-4 py-2 text-sm text-stone-700 hover:bg-amber-100 hover:text-amber-900"
+                    >
+                      {category}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
             
-            <Link to="/new-arrivals" className="text-gray-700 hover:text-oldTomes-brown">New Arrivals</Link>
-            <Link to="/my-library" className="text-gray-700 hover:text-oldTomes-brown">My Library</Link>
+            <Link to="/new-arrivals" className="text-stone-700 hover:text-amber-800 transition-colors font-medium">
+              New Arrivals
+            </Link>
+            
+            <Link to="/my-library" className="text-stone-700 hover:text-amber-800 transition-colors font-medium">
+              My Library
+            </Link>
           </div>
 
-          {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8">
-            <div className="relative w-full">
-              <input 
-                type="text" 
-                placeholder="Search titles, authors..." 
-                className="w-full py-2 pl-10 pr-4 rounded-full bg-oldTomes-gold/20 border-none focus:outline-none"
+          {/* Right Side - Search, Cart, User */}
+          <div className="flex items-center">
+            {/* Search */}
+            <div className="hidden md:flex items-center relative mr-4">
+              <input
+                type="text"
+                placeholder="Search titles, authors..."
+                className="w-48 lg:w-64 h-9 pl-9 pr-4 rounded-full bg-amber-100/80 text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
               />
-              <div className="absolute left-3 top-2.5 text-gray-500">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-              </div>
+              <Search size={16} className="absolute left-3 text-stone-500" />
             </div>
-          </div>
-
-          {/* Cart and Account */}
-          <div className="flex items-center space-x-4">
+            
             {/* Cart */}
-            <Link to="/cart" className="p-2 relative text-gray-700 hover:text-oldTomes-brown">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-              </svg>
-              <span className="absolute -top-1 -right-1 bg-oldTomes-brown text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">3</span>
+            <Link to="/cart" className="relative p-2 text-stone-700 hover:text-amber-800 transition-colors">
+              <ShoppingCart size={20} />
+              <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs bg-amber-800 text-white rounded-full">
+                3
+              </span>
             </Link>
-
-            {/* Account */}
-            <Link to="/account" className="p-2 text-gray-700 hover:text-oldTomes-brown">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
-            </Link>
-
-            {/* Mobile menu button */}
+            
+            {/* User Menu */}
+            <div className="relative ml-4">
+              <button 
+                className="p-2 text-stone-700 hover:text-amber-800 transition-colors"
+                onClick={toggleUserMenu}
+              >
+                <User size={20} />
+              </button>
+              
+              {isUserMenuOpen && (
+                <div className="absolute top-full right-0 mt-1 w-48 bg-amber-50 border border-amber-200 rounded-md shadow-lg py-1 z-10 animate-fade-in">
+                  {userMenuItems.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <Link 
+                        to={item.path}
+                        className="block px-4 py-2 text-sm text-stone-700 hover:bg-amber-100 hover:text-amber-900"
+                      >
+                        {item.name}
+                      </Link>
+                      {index === userMenuItems.length - 2 && (
+                        <div className="border-t border-amber-200 my-1"></div>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            {/* Mobile Menu Button */}
             <button 
-              className="md:hidden p-2 text-gray-700 hover:text-oldTomes-brown"
+              className="md:hidden p-2 ml-4 text-stone-700 hover:text-amber-800 transition-colors"
               onClick={toggleMobileMenu}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
+              <Menu size={20} />
             </button>
           </div>
         </div>
 
-        {/* Mobile search - visible only on mobile */}
-        <div className="mt-3 md:hidden">
-          <div className="relative">
-            <input 
-              type="text" 
-              placeholder="Search titles, authors..." 
-              className="w-full py-2 pl-10 pr-4 rounded-full bg-oldTomes-gold/20 border-none focus:outline-none"
-            />
-            <div className="absolute left-3 top-2.5 text-gray-500">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
+        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden mt-3 pb-3 animate-fade-in">
-            <Link to="/" className="block py-2 hover:text-oldTomes-brown">Home</Link>
-            <button 
-              className="w-full text-left py-2 flex items-center justify-between hover:text-oldTomes-brown"
-              onClick={toggleCategories}
-            >
-              <span>Categories</span>
-              <svg className={`w-4 h-4 transform ${isCategoriesOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </button>
-            
-            {isCategoriesOpen && (
-              <div className="pl-4 space-y-2 mt-1 mb-2">
-                <Link to="/category/classic-literature" className="block py-1 hover:text-oldTomes-brown">
-                  Classic Literature
-                </Link>
-                <Link to="/category/history" className="block py-1 hover:text-oldTomes-brown">
-                  History
-                </Link>
-                <Link to="/category/philosophy" className="block py-1 hover:text-oldTomes-brown">
-                  Philosophy
-                </Link>
-                <Link to="/category/poetry" className="block py-1 hover:text-oldTomes-brown">
-                  Poetry
-                </Link>
-                <Link to="/categories" className="block py-1 hover:text-oldTomes-brown font-medium">
-                  All Categories
-                </Link>
+          <div className="md:hidden bg-amber-50 border-t border-amber-200 animate-fade-in">
+            <div className="p-4 space-y-1">
+              <div className="relative mb-4">
+                <input
+                  type="text"
+                  placeholder="Search titles, authors..."
+                  className="w-full h-10 pl-9 pr-4 rounded-full bg-amber-100/80 text-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500" />
               </div>
-            )}
-            
-            <Link to="/new-arrivals" className="block py-2 hover:text-oldTomes-brown">New Arrivals</Link>
-            <Link to="/my-library" className="block py-2 hover:text-oldTomes-brown">My Library</Link>
+              
+              <Link to="/" className="block py-2 text-stone-700">
+                Home
+              </Link>
+              
+              <button 
+                className="flex items-center justify-between w-full py-2 text-stone-700"
+                onClick={toggleCategories}
+              >
+                <span>Categories</span>
+                <ChevronDown size={16} className={`transition-transform ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {isCategoriesOpen && (
+                <div className="ml-4 mt-1 space-y-1 border-l border-amber-200 pl-4">
+                  {categories.map((category, index) => (
+                    <Link 
+                      key={index} 
+                      to={`/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="block py-2 text-sm text-stone-700"
+                    >
+                      {category}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              
+              <Link to="/new-arrivals" className="block py-2 text-stone-700">
+                New Arrivals
+              </Link>
+              
+              <Link to="/my-library" className="block py-2 text-stone-700">
+                My Library
+              </Link>
+              
+              <div className="border-t border-amber-200 my-2"></div>
+              
+              {userMenuItems.map((item, index) => (
+                <Link 
+                  key={index}
+                  to={item.path}
+                  className="block py-2 text-stone-700"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </div>
